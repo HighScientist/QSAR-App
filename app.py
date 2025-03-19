@@ -7,22 +7,37 @@ import base64
 import pickle
 
 def desc_calc():
-    # Comando Java para calcular os descritores
     bashCommand = "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xms2G -Xmx2G -Djava.awt.headless=true -jar ./PaDEL-Descriptor/PaDEL-Descriptor.jar -removesalt -standardizenitro -fingerprints -descriptortypes ./PaDEL-Descriptor/PubchemFingerprinter.xml -dir ./ -file descriptors_output.csv"
-
+    
     try:
-        # Executa o comando no subprocesso, capturando a saída e erros
         process = subprocess.run(bashCommand, shell=True, check=True, capture_output=True, text=True)
-
-        # Exibe a saída padrão e erros
+        
+        # Log de saída
         print("Saída do comando:", process.stdout)
         if process.stderr:
             print("Erros:", process.stderr)
-
+        
+        # Verifica se o arquivo foi criado
+        if os.path.exists('descriptors_output.csv'):
+            st.write("Arquivo de descritores gerado com sucesso!")
+        else:
+            st.write("Erro: O arquivo descriptors_output.csv não foi gerado.")
+    
     except subprocess.CalledProcessError as e:
-        print(f"Erro na execução do comando. Código de erro: {e.returncode}")
-        print(f"Saída de erro: {e.stderr}")
-        print(f"Saída padrão: {e.stdout}")
+        st.write(f"Erro ao executar o comando. Código de erro: {e.returncode}")
+        st.write(f"Saída de erro: {e.stderr}")
+        st.write(f"Saída padrão: {e.stdout}")
+
+# Caminho absoluto para garantir que o arquivo seja salvo no diretório correto
+output_file_path = os.path.join(os.getcwd(), 'descriptors_output.csv')
+
+# Verifique se o arquivo foi gerado
+if os.path.exists(output_file_path):
+    desc = pd.read_csv(output_file_path)
+    st.write(desc)
+    st.write(desc.shape)
+else:
+    st.error("Erro: o arquivo descriptors_output.csv não foi encontrado!")
 
 # File download
 def filedownload(df):
