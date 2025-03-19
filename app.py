@@ -47,9 +47,8 @@ st.markdown("""
 This app allows you to predict the bioactivity towards inhibting the `MGMT` enzyme. `MGMT` is a drug target for High Grade Gliomas.
 
 **Credits**
-- App built in `Python` + `Streamlit` by [Chanin Nantasenamat](https://medium.com/@chanin.nantasenamat) (aka [Data Professor](http://youtube.com/dataprofessor))
 - Descriptor calculated using [PaDEL-Descriptor](http://www.yapcwsoft.com/dd/padeldescriptor/) [[Read the Paper]](https://doi.org/10.1002/jcc.21707).
-- Dataset and Machine Learning Model adaptation by [HighScientist](https://github.com/HighScientist)
+- Dataset and Machine Learning Model adaptation by [HighScientist](https://github.com/HighScientist) from [Chanin Nantasenamat](https://medium.com/@chanin.nantasenamat)
 ---
 """)
 
