@@ -50,6 +50,7 @@ This app allows you to predict the bioactivity towards inhibting the `MGMT` enzy
 with st.sidebar.header('1. Upload your CSV data'):
     uploaded_file = st.sidebar.file_uploader("Upload your input file", type=['txt'])
     st.sidebar.markdown("""
+[Example input file](https://github.com/HighScientist/Project-MGMT/blob/main/AI/lomeguatrib.txt)
 """)
 
 if st.sidebar.button('Predict'):
