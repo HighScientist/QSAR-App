@@ -34,6 +34,12 @@ def build_model(input_data):
     st.write(df)
     st.markdown(filedownload(df), unsafe_allow_html=True)
 
+
+# Logo image
+image = Image.open('logo.png')
+
+st.image(image, use_column_width=True)
+
 # Page title
 st.markdown("""
 # Bioactivity Prediction App (MGMT)
@@ -43,6 +49,7 @@ This app allows you to predict the bioactivity towards inhibting the `MGMT` enzy
 **Credits**
 - App built in `Python` + `Streamlit` by [Chanin Nantasenamat](https://medium.com/@chanin.nantasenamat) (aka [Data Professor](http://youtube.com/dataprofessor))
 - Descriptor calculated using [PaDEL-Descriptor](http://www.yapcwsoft.com/dd/padeldescriptor/) [[Read the Paper]](https://doi.org/10.1002/jcc.21707).
+- Dataset and Machine Learning Model adaptation by [HighScientist](https://github.com/HighScientist)
 ---
 """)
 
