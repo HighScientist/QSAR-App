@@ -6,21 +6,23 @@ import os
 import base64
 import pickle
 
-# Molecular descriptor calculator
 def desc_calc():
-    # Perform descriptor calculation with Java
+    # Comando Java para calcular os descritores
     bashCommand = "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xms2G -Xmx2G -Djava.awt.headless=true -jar ./PaDEL-Descriptor/PaDEL-Descriptor.jar -removesalt -standardizenitro -fingerprints -descriptortypes ./PaDEL-Descriptor/PubchemFingerprinter.xml -dir ./ -file descriptors_output.csv"
 
-    # Run the command and capture output
-    process = subprocess.run(bashCommand, shell=True, check=True, capture_output=True, text=True)
+    try:
+        # Executa o comando no subprocesso, capturando a saída e erros
+        process = subprocess.run(bashCommand, shell=True, check=True, capture_output=True, text=True)
 
-    # If there is any output, print it
-    print("Output:", process.stdout)
-    if process.stderr:
-        print("Error:", process.stderr)
+        # Exibe a saída padrão e erros
+        print("Saída do comando:", process.stdout)
+        if process.stderr:
+            print("Erros:", process.stderr)
 
-    # Clean up by removing molecule.smi
-    os.remove('molecule.smi')
+    except subprocess.CalledProcessError as e:
+        print(f"Erro na execução do comando. Código de erro: {e.returncode}")
+        print(f"Saída de erro: {e.stderr}")
+        print(f"Saída padrão: {e.stdout}")
 
 # File download
 def filedownload(df):
