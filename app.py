@@ -7,15 +7,17 @@ import base64
 import pickle
 
 def desc_calc():
+    # Comando Java para calcular os descritores
     bashCommand = "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xms2G -Xmx2G -Djava.awt.headless=true -jar ./PaDEL-Descriptor/PaDEL-Descriptor.jar -removesalt -standardizenitro -fingerprints -descriptortypes ./PaDEL-Descriptor/PubchemFingerprinter.xml -dir ./ -file descriptors_output.csv"
     
     try:
+        # Executa o comando no subprocesso, capturando a saída e erros
         process = subprocess.run(bashCommand, shell=True, check=True, capture_output=True, text=True)
         
         # Log de saída
-        print("Saída do comando:", process.stdout)
+        st.write("Saída do comando:", process.stdout)
         if process.stderr:
-            print("Erros:", process.stderr)
+            st.write("Erros:", process.stderr)
         
         # Verifica se o arquivo foi criado
         if os.path.exists('descriptors_output.csv'):
@@ -48,21 +50,20 @@ def filedownload(df):
 
 # Model building
 def build_model(input_data):
-    # Reads in saved regression model
+    # Lê o modelo de regressão salvo
     load_model = pickle.load(open('MGMT_model.pkl', 'rb'))
-    # Apply model to make predictions
+    
+    # Aplica o modelo para fazer previsões
     prediction = load_model.predict(input_data)
     st.header('**Prediction output**')
     prediction_output = pd.Series(prediction, name='pIC50')
-    molecule_name = pd.Series(load_data[1], name='molecule_name')
+    molecule_name = pd.Series(load_data[1], name='molecule_name')  # Assumindo que 'load_data' tem um nome de molécula na posição 1
     df = pd.concat([molecule_name, prediction_output], axis=1)
     st.write(df)
     st.markdown(filedownload(df), unsafe_allow_html=True)
 
-
 # Logo image
 image = Image.open('logo.png')
-
 st.image(image, use_container_width=True)
 
 # Page title
@@ -96,18 +97,21 @@ if st.sidebar.button('Predict'):
 
     # Read in calculated descriptors and display the dataframe
     st.header('**Calculated molecular descriptors**')
-    desc = pd.read_csv('descriptors_output.csv')
-    st.write(desc)
-    st.write(desc.shape)
+    if os.path.exists('descriptors_output.csv'):
+        desc = pd.read_csv('descriptors_output.csv')
+        st.write(desc)
+        st.write(desc.shape)
 
-    # Read descriptor list used in previously built model
-    st.header('**Subset of descriptors from previously built models**')
-    Xlist = list(pd.read_csv('descriptor_list.csv').columns)
-    desc_subset = desc[Xlist]
-    st.write(desc_subset)
-    st.write(desc_subset.shape)
+        # Read descriptor list used in previously built model
+        st.header('**Subset of descriptors from previously built models**')
+        Xlist = list(pd.read_csv('descriptor_list.csv').columns)  # Obtém a lista de descritores
+        desc_subset = desc[Xlist]  # Filtra os descritores conforme o modelo
+        st.write(desc_subset)
+        st.write(desc_subset.shape)
 
-    # Apply trained model to make prediction on query compounds
-    build_model(desc_subset)
+        # Apply trained model to make prediction on query compounds
+        build_model(desc_subset)
+    else:
+        st.error("Erro: O arquivo descriptors_output.csv não foi encontrado!")
 else:
     st.info('Upload input data in the sidebar to start!')
