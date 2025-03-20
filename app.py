@@ -6,6 +6,10 @@ import os
 import base64
 import pickle
 
+# Defina o JAVA_HOME e adicione ao PATH
+os.environ['JAVA_HOME'] = '/usr/lib/jvm/java-11-openjdk-amd64'
+os.environ['PATH'] = os.environ['JAVA_HOME'] + '/bin:' + os.environ['PATH']
+
 # Molecular descriptor calculator
 def desc_calc():
     # Performs the descriptor calculation
